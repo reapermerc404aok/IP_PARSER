@@ -12,7 +12,7 @@ struct IP {
 };
 
 void display_ip(struct IP *ip) {
-    printf("Crafted IP: %d.%d.%d.%d\n", ip->oct[0], ip->oct[1], ip->oct[2], ip->oct[3]);
+    printf("%d.%d.%d.%d\n", ip->oct[0], ip->oct[1], ip->oct[2], ip->oct[3]);
 }
 
 void range_incrementer(char *start, char *end) {
@@ -25,15 +25,27 @@ void range_incrementer(char *start, char *end) {
     char *oct4start = strtok_r(start, oct_delim, &save_tok);
 
     // Initialize IP object with octet values
-    struct IP *ip = (struct IP*) malloc(sizeof(struct IP));
+    struct IP *ip_start = (struct IP*) malloc(sizeof(struct IP));
     int i = 0;
 
     while(oct4start != NULL) {
-        ip->oct[i++] = atoi(oct4start);
+        ip_start->oct[i++] = atoi(oct4start);
         oct4start = strtok_r(NULL, oct_delim, &save_tok);
     }
 
-    display_ip(ip);
+    char *save_tok2;
+    char *oct4end = strtok_r(end, oct_delim, &save_tok2);
+
+    struct IP *ip_end = (struct IP*) malloc(sizeof(struct IP));
+    i = 0;
+
+    while(oct4end != NULL) {
+        ip_end->oct[i++] = atoi(oct4end);
+        oct4end = strtok_r(NULL, oct_delim, &save_tok2);
+    }
+
+    printf("start IP: "); display_ip(ip_start);
+    printf("end IP: "); display_ip(ip_end);
 
 }
 
@@ -47,9 +59,7 @@ int range_handler(char *token_cpy) {
     char *ip_start = strtok_r(token_cpy, ip_delim, &save_tok);
 
     puts("RANGE BROKEN DOWN");
-    printf("IP_STARTS: %s\n", ip_start);
     char *ip_end = strtok_r(NULL, ip_delim, &save_tok);
-    printf("IP_ENDS: %s\n", ip_end);
 
     range_incrementer(ip_start, ip_end);
 
