@@ -4,11 +4,39 @@
 #include <string.h>
 
 size_t LEN = 1000;
+size_t OCT_MAX = 255;
 
 
 struct IP {
     uint8_t oct[4];
 };
+
+void display_ip(struct IP *ip) {
+    printf("Crafted IP: %d.%d.%d.%d\n", ip->oct[0], ip->oct[1], ip->oct[2], ip->oct[3]);
+}
+
+void range_incrementer(char *start, char *end) {
+
+    // Start and END IPs are already extracted. For example start will be "10.10.10.10" and end will "10.10.15.20"
+
+    // Extract start IP
+    char *oct_delim = ".";
+    char *save_tok;
+    char *oct4start = strtok_r(start, oct_delim, &save_tok);
+
+    // Initialize IP object with octet values
+    struct IP *ip = (struct IP*) malloc(sizeof(struct IP));
+    int i = 0;
+
+    while(oct4start != NULL) {
+        ip->oct[i++] = atoi(oct4start);
+        oct4start = strtok_r(NULL, oct_delim, &save_tok);
+    }
+
+    display_ip(ip);
+
+}
+
 
 int range_handler(char *token_cpy) {
 
@@ -22,6 +50,9 @@ int range_handler(char *token_cpy) {
     printf("IP_STARTS: %s\n", ip_start);
     char *ip_end = strtok_r(NULL, ip_delim, &save_tok);
     printf("IP_ENDS: %s\n", ip_end);
+
+    range_incrementer(ip_start, ip_end);
+
     return 0;
 }
 
