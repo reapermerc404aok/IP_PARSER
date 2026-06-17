@@ -7,79 +7,85 @@ size_t LEN = 1000;
 
 
 struct IP {
-	uint8_t oct[4];
+    uint8_t oct[4];
 };
+
+int range_handler(char *token_cpy) {
+
+    // Range handler should filter out the start and end of the range, then pass it to an IP incrementer for printing individual IPs.
+
+    char *ip_delim = "-";
+    char *save_tok;
+    char *ip_start = strtok_r(token_cpy, ip_delim, &save_tok);
+
+    puts("RANGE BROKEN DOWN");
+    printf("IP_STARTS: %s\n", ip_start);
+    char *ip_end = strtok_r(NULL, ip_delim, &save_tok);
+    printf("IP_ENDS: %s\n", ip_end);
+    return 0;
+}
+
 
 int main(void) {
 
-	FILE *f = fopen("sample.txt", "r");
-	if (!f) return -1;
+    FILE *f = fopen("sample.txt", "r");
+    if (!f) return -1;
 
-	// Initialize buffer to read a single line from the file
+    // Initialize buffer to read a single line from the file
 
-	char *ln = (char*) malloc(sizeof(char)*LEN);
-	ssize_t status = 0;
+    char *ln = (char*) malloc(sizeof(char)*LEN);
+    ssize_t status = 0;
 
-	while ((status = getline(&ln, &LEN, f)) != -1) {
+    while ((status = getline(&ln, &LEN, f)) != -1) {
 
-		// Copy string since tokenization is destructive to the original string
-	
-		size_t ln_len = strlen(ln);
+        // Copy string since tokenization is destructive to the original string
 
-		char *ln_cpy = (char*) malloc(ln_len + 1);
-		strncpy(ln_cpy, ln, ln_len);
-		ln_cpy[ln_len] = '\0';
+        size_t ln_len = strlen(ln);
 
-		// tokenize the copied string
+        char *ln_cpy = (char*) malloc(ln_len + 1);
+        strncpy(ln_cpy, ln, ln_len);
+        ln_cpy[ln_len] = '\0';
 
-		char *save;
-		const char delim[] = ",";
-		char *token = strtok_r(ln_cpy, delim, &save);
+        // tokenize the copied string
 
-		while (token != NULL) {
-			
-			// At this stage individual IPs are extractible, need to implement range extraction
+        char *save;
+        const char delim[] = ",";
+        char *token = strtok_r(ln_cpy, delim, &save);
 
-			if(strchr(token, '-') != NULL) {
-				
-				// RANGE FOUND!!! Begin extraction
+        while (token != NULL) {
 
-				printf("Range found: %s\n", token); 
+            // At this stage individual IPs are extractible, need to implement range extraction
 
-				// Copy token since tokenization is destructive
+            if(strchr(token, '-') != NULL) {
 
-				size_t token_len = strlen(token);
-				char *token_cpy = (char*) malloc(token_len+1);
-				strncpy(token_cpy, token, token_len);
-				token_cpy[token_len] = '\0';
+                // RANGE FOUND!!! Begin extraction
 
-				printf("TOKEN CPY %s\n", token_cpy);
+                printf("Range found: %s\n", token); 
 
+                // Copy token since tokenization is destructive
 
-				// WORKS UPTILL HERE
+                size_t token_len = strlen(token);
+                char *token_cpy = (char*) malloc(token_len+1);
+                strncpy(token_cpy, token, token_len);
+                token_cpy[token_len] = '\0';
 
-				char *ip_delim = "-";
-				char *save_tok;
-				char *ip_initials = strtok_r(token_cpy, ip_delim, &save_tok);
+                // Pass token copy to range handler
 
-				while(ip_initials != NULL) {
-					puts("RANGE BROKEN DOWN");
-					printf("IP_STARTS: %s", ip_initials);
-					ip_initials = strtok_r(NULL, ip_delim, &save_tok);
-				}
-
-			} else {
-
-				puts(token);
-			}
-
-			token = strtok_r(NULL, delim, &save);
-
-		}
+                int res = range_handler(token_cpy);
 
 
-	}
+            } else {
+
+                puts(token);
+            }
+
+            token = strtok_r(NULL, delim, &save);
+
+        }
 
 
-	return 0;
+    }
+
+
+    return 0;
 }
