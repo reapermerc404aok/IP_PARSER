@@ -40,15 +40,11 @@ void extractor(struct IP *start, struct IP *end) {
 	struct IP *tmp2 = (struct IP*)ip2;
 
 	assert(*ip1 < *ip2);
-	printf("Count %d\n", abs(*ip1 - *ip2));
-	while(*ip1 < *ip2) {
+	//printf("Count %d\n", abs(*ip1 - *ip2));
+	while(*ip1 <= *ip2) {
 		display_ip(tmp);
 		*ip1 = *ip1 + 1;
 	}
-
-	display_ip(tmp);
-	display_ip(tmp2);
-	
 
 
 }
@@ -85,8 +81,8 @@ void range_incrementer(char *start, char *end) {
 		oct4end = strtok_r(NULL, oct_delim, &save_tok2);
 	}
 
-	printf("start IP: "); display_ip(ip_start);
-	printf("end IP: "); display_ip(ip_end);
+	//printf("start IP: "); display_ip(ip_start);
+	//printf("end IP: "); display_ip(ip_end);
 
 	extractor(ip_start, ip_end);
 
@@ -101,7 +97,7 @@ int range_handler(char *token_cpy) {
 	char *save_tok;
 	char *ip_start = strtok_r(token_cpy, ip_delim, &save_tok);
 
-	puts("RANGE BROKEN DOWN");
+	//puts("RANGE BROKEN DOWN");
 	char *ip_end = strtok_r(NULL, ip_delim, &save_tok);
 
 	range_incrementer(ip_start, ip_end);
@@ -144,7 +140,7 @@ int main(void) {
 
 				// RANGE FOUND!!! Begin extraction
 
-				printf("Range found: %s\n", token); 
+				// printf("Range found: %s\n", token); 
 
 				// Copy token since tokenization is destructive
 
@@ -160,7 +156,7 @@ int main(void) {
 
 			} else {
 
-				puts(token);
+				printf("%s\n", token);
 			}
 
 			token = strtok_r(NULL, delim, &save);
